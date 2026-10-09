@@ -1,0 +1,15 @@
+# 资讯源配置。enabled=false 的源不参与采集（连通性问题见 2026-10-09 审计）。
+sources:
+  - {name: "TechCrunch AI", url: "https://techcrunch.com/category/artificial-intelligence/feed/", type: rss, lang: en, enabled: true}
+  - {name: "The Verge AI", url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", type: rss, lang: en, enabled: true}
+  - {name: "Google News AI (EN)", url: "https://news.google.com/rss/search?q=AI+when:1d&hl=en-US&gl=US&ceid=US:en", type: rss, lang: en, enabled: true}
+  - {name: "Ars Technica", url: "https://feeds.arstechnica.com/arstechnica/index", type: rss, lang: en, enabled: true}
+  - {name: "MIT Technology Review", url: "https://www.technologyreview.com/feed/", type: rss, lang: en, enabled: true}
+  - {name: "OpenAI Blog", url: "https://openai.com/news/rss.xml", type: rss, lang: en, enabled: true}
+  - {name: "NVIDIA Blog", url: "https://blogs.nvidia.com/feed/", type: rss, lang: en, enabled: true}
+  - {name: "Simon Willison", url: "https://simonwillison.net/atom/everything/", type: atom, lang: en, enabled: true}
+  - {name: "Hacker News", url: "https://hnrss.org/frontpage", type: rss, lang: en, enabled: true}
+  # 以下 3 个源在 2026-10-09 审计中不可达，默认禁用；恢复后可改 enabled: true
+  - {name: "Google AI Blog", url: "https://blog.google/technology/ai/rss/", type: rss, lang: en, enabled: false, note: "审计: SSL 超时"}
+  - {name: "Meta AI Blog", url: "https://ai.meta.com/blog/rss/", type: rss, lang: en, enabled: false, note: "审计: 连接超时"}
+  - {name: "Reuters AI", url: "https://www.reuters.com/technology/artificial-intelligence/rss.xml", type: rss, lang: en, enabled: false, note: "审计: 连接被拒"}

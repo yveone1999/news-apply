@@ -1,0 +1,21 @@
+[project]
+name = "xuan-zhi-content-engine"
+version = "0.1.0"
+description = "玄知见解 · 海外 AI 科技内容运营系统（本地内容运营闭环）"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "sqlalchemy>=2.0",
+  "alembic>=1.13",
+  "httpx>=0.27",
+  "feedparser>=6.0",
+  "pyyaml>=6.0",
+  "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

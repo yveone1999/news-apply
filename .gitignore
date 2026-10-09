@@ -1,0 +1,15 @@
+.venv/
+.env
+data/
+logs/
+storage/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+node_modules/
+apps/web/dist/
+*.sqlite
+*.db
+*.db-shm
+*.db-wal
