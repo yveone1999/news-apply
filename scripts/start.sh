@@ -21,7 +21,8 @@ fi
 
 HOST="${API_HOST:-127.0.0.1}"
 PORT="${API_PORT:-8700}"
-nohup .venv/bin/uvicorn apps.api.main:app --host "$HOST" --port "$PORT" >> "$LOG_DIR/api.log" 2>&1 &
+# 用 detach.py 以新会话启动：父 shell / 会话结束后服务继续常驻
+.venv/bin/python scripts/detach.py "$LOG_DIR/api.log" .venv/bin/uvicorn apps.api.main:app --host "$HOST" --port "$PORT" &
 echo $! > "$PID_FILE"
 sleep 2
 
