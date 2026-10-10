@@ -18,6 +18,7 @@ from src.domain.models import Base, NewsItem, NewsSource, WorkflowRun, utcnow
 from src.llm.client import LLMClient, LLMConfig, LLMError
 from src.observability.logging import setup_logging
 from src.workflows.runs import ConflictError, finish_run, start_run
+from apps.api.routes_content import build_routes
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 load_dotenv(PROJECT_ROOT / ".env")
@@ -78,6 +79,9 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+app.include_router(build_routes(get_db, get_llm))  # 阶段 C 内容路由
 
 
 # ---------- 健康检查 ----------

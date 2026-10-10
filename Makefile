@@ -20,3 +20,12 @@ test:
 
 run:
 	$(BIN)/uvicorn apps.api.main:app --host 127.0.0.1 --port 8700
+
+start:
+	./scripts/start.sh
+
+stop:
+	./scripts/stop.sh
+
+status:
+	./scripts/status.sh

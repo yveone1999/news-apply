@@ -56,6 +56,7 @@ class Topic(Base):
     score: Mapped[float | None] = mapped_column(Float)  # 0-100
     score_detail: Mapped[str | None] = mapped_column(Text)  # JSON: 各维度得分
     status: Mapped[str] = mapped_column(String(20), default="candidate", index=True)
+    item_ids: Mapped[str | None] = mapped_column(Text)  # JSON: [news_item.id]
     note: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
@@ -84,6 +85,7 @@ class Article(Base):
     column_name: Mapped[str | None] = mapped_column(String(50))
     status: Mapped[str] = mapped_column(String(20), default="draft", index=True)
     current_version: Mapped[int] = mapped_column(Integer, default=1)
+    quality_report: Mapped[str | None] = mapped_column(Text)  # JSON: 质量门禁报告
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
     versions: Mapped[list["ArticleVersion"]] = relationship(back_populates="article", order_by="ArticleVersion.version")
