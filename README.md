@@ -29,6 +29,14 @@ make run           # 启动 API：http://127.0.0.1:8700
 - `GET /api/v1/workflow-runs` 任务记录
 - `POST /api/v1/llm/test` 模型连接测试（真实推理）
 
+## 每日导出发布包（toutiao-content/）
+审批通过的文章跑一次导出，即生成 `toutiao-content/<日期>/` 一键粘贴发布包：
+```bash
+.venv/bin/python scripts/export_daily.py            # 默认北京时区当天
+.venv/bin/python scripts/export_daily.py 2026-10-10 # 指定日期
+```
+产出：raw/（资讯池）、news_digest.md、articles.md、briefs.md、final/（publish_main / publish_briefs / review_report / CHECKLIST）。封面用 `../toutiao/pipeline/make_cover.py` 生成 `images/cover.png`。线程：审批通过 → 导出 → 人工粘到头条 → 发布后回填数据。
+
 ## 阶段 C 已交付
 - `GET /api/v1/topics?status=&column_name=&min_score=` 选题池
 - `POST /api/v1/topics/generate {max_topics, hours}` LLM 100 分制选题评分（5 维度：受众25/可靠性25/差异化20/时效15/定位15）
