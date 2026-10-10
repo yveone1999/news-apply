@@ -19,6 +19,7 @@ from src.llm.client import LLMClient, LLMConfig, LLMError
 from src.observability.logging import setup_logging
 from src.workflows.runs import ConflictError, finish_run, start_run
 from apps.api.routes_content import build_routes
+from apps.api.routes_ops import build_routes as build_ops_routes
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 load_dotenv(PROJECT_ROOT / ".env")
@@ -82,6 +83,7 @@ def get_db():
 
 
 app.include_router(build_routes(get_db, get_llm))  # 阶段 C 内容路由
+app.include_router(build_ops_routes(get_db))  # 阶段 D 运营路由
 
 
 # ---------- 健康检查 ----------
@@ -211,3 +213,26 @@ def llm_test():
         raise HTTPException(502, f"模型接口不可用: {exc}") from exc
     finally:
         client.close()
+
+# ---------- 静态资源与前端管理台 ----------
+
+from fastapi.responses import FileResponse  # noqa: E402
+from fastapi.staticfiles import StaticFiles  # noqa: E402
+
+_IMAGES_DIR = PROJECT_ROOT / "storage" / "images"
+_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/media-files", StaticFiles(directory=str(_IMAGES_DIR)), name="media-files")
+
+_WEB_DIST = PROJECT_ROOT / "apps" / "web" / "dist"
+if _WEB_DIST.exists():
+    app.mount("/assets", StaticFiles(directory=str(_WEB_DIST / "assets"), check_dir=False),
+              name="web-assets")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    def spa_fallback(full_path: str):
+        if full_path.startswith("api/"):
+            raise HTTPException(404)
+        candidate = _WEB_DIST / full_path
+        if full_path and candidate.is_file():
+            return FileResponse(candidate)
+        return FileResponse(_WEB_DIST / "index.html")

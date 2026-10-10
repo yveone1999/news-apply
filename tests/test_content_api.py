@@ -141,3 +141,27 @@ def test_quality_failure_blocks_submit():
             gen.close()
         except Exception:
             pass
+
+
+def test_research_detail_endpoint():
+    from tests.test_content_api import build_client
+    gen = build_client()
+    c = next(gen)
+    try:
+        c.post("/api/v1/topics/generate", json={"max_topics": 2})
+        topic_id = c.get("/api/v1/topics").json()["items"][0]["id"]
+        assert c.post(f"/api/v1/topics/{topic_id}/research").status_code == 200
+        research_id = c.get(f"/api/v1/research?topic_id={topic_id}").json()["items"][0]["id"]
+        r = c.get(f"/api/v1/research/{research_id}")
+        assert r.status_code == 200
+        body = r.json()
+        assert body["id"] == research_id and body["topic_id"] == topic_id
+        assert body["content"] == "研究档案内容"
+        assert body["evidence"][0]["source_url"] == "https://seed.com/1"
+        assert body["open_questions"] == ["细节待核"]
+        assert c.get("/api/v1/research/99999").status_code == 404
+    finally:
+        try:
+            gen.close()
+        except Exception:
+            pass

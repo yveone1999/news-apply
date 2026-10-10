@@ -138,6 +138,19 @@ def build_routes(get_db, get_llm) -> APIRouter:
             for rec in rows
         ]}
 
+    @r.get("/research/{research_id}")
+    def get_research(research_id: int, db: Session = Depends(get_db)):
+        rec = db.get(ResearchRecord, research_id)
+        if not rec:
+            raise HTTPException(404, "研究档案不存在")
+        return {
+            "id": rec.id, "topic_id": rec.topic_id, "content": rec.content,
+            "evidence": json.loads(rec.evidence or "[]"),
+            "open_questions": json.loads(rec.open_questions or "[]"),
+            "conclusion": rec.conclusion,
+            "created_at": rec.created_at.isoformat(),
+        }
+
     @r.post("/articles/generate")
     def articles_generate(body: GenerateArticleIn, db: Session = Depends(get_db), llm: LLMClient = Depends(get_llm)):
         topic = db.get(Topic, body.topic_id)

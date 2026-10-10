@@ -25,6 +25,10 @@ nohup .venv/bin/uvicorn apps.api.main:app --host "$HOST" --port "$PORT" >> "$LOG
 echo $! > "$PID_FILE"
 sleep 2
 
+if [ ! -f apps/web/dist/index.html ]; then
+  echo "   提示: 前端管理台未构建，API 仍可用；构建: cd apps/web && npm install && npm run build"
+fi
+
 if kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
   echo "✅ 服务已启动: http://$HOST:$PORT  (pid $(cat "$PID_FILE"))"
   echo "   健康检查: curl http://$HOST:$PORT/health"
